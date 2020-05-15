@@ -44,7 +44,7 @@ shinyServer(function(input, output, session) {
     data <- pull(data, dataCol)
     return(data)
   })
-  
+  #
   output$dataTable <- DT::renderDataTable({
     date <- getDateFromInput()
     data <- getDataFromInput()
