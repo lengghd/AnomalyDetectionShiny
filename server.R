@@ -1,15 +1,33 @@
 library(AnomalyDetection)
-library(DT)
+library(DT)                               # R interface to the JavaScript library DataTables.   
+#https://rstudio.github.io/DT/
+
 library(readr)
 library(shiny)
-library(tibbletime)
-library(tidyverse)
 
+#tidyverts family package
+library(tibbletime)    #retired. switched to #tsibble
+#tsibble ： fill_gaps()
+#as_tsibble(df, key = catg, index = time_hour)    #package?tsibble    #vignette("intro-tsibble")
+#index_by() + summarise()
+
+library(tidyverse)           #read_csv
+
+#https://shiny.rstudio.com/reference/shiny/1.4.0/session.html
 shinyServer(function(input, output, session) {
   dataInput <- reactive({
     req(input$inputFile)
     ts_data <-
-      read_csv(input$inputFile$datapath, col_names = input$headers)
+      read_csv(input$inputFile$datapath, 
+               #datapath: datapath
+               #...The path to a temp file containing data uploaded. 
+               #...file may be deleted if performs another upload operation.
+               
+               #fileInput(inputId, label, multiple = FALSE, accept = NULL,
+               #          width = NULL, buttonLabel = "Browse...",
+               #          placeholder = "No file selected")
+               
+               col_names = input$headers)
     return(ts_data)
   })
   
@@ -32,6 +50,13 @@ shinyServer(function(input, output, session) {
     data <- getDataFromInput()
     return(data.frame(date, data))
   })
+#  renderDT(df, options = list(
+#    pageLength = 5,
+#    initComplete = JS('function(setting, json) { alert("done"); }')
+#  )
+#)
+  
+  #renderDT: datatable(DF) : formatStyle : X = styleInterval(#, c('col1', 'col2')
   
   observeEvent(dataInput(), {
     updateSelectInput(session, "dataCol", choices = names(dataInput()))
@@ -80,3 +105,4 @@ shinyServer(function(input, output, session) {
     return(anomalies$anoms)
   })
 })
+
