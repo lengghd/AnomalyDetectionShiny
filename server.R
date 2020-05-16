@@ -117,12 +117,18 @@ shinyServer(function(input, output, session) {
   
   findAnomalies <- reactive({
     ts_data <- make_ts()
-    anom_data <- AnomalyDetectionVec(
-      x = as.vector(ts_data),
-      max_anoms = as.double(input$max_anoms),
-      direction = input$direction,
-      alpha = as.double(input$alpha),
-      period = as.integer(input$freq),
+    
+    anom_data <- AnomalyDetectionVec(                #AnomalyDetectionVec
+      
+      x = as.vector(ts_data),                        # data as.vector
+      max_anoms = as.double(input$max_anoms),        #as.double : max_anoms
+      #reate a double-precision array automatically when you assign a numeric scalar or array to a variable, such as A = [1 2 3; 4 5 6]
+      #https://www.mathworks.com/help/matlab/ref/double.html
+      #http://pyweb.swan.ac.uk/~allton/VisualBasic/node9.html
+      
+      direction = input$direction,                    #input$direction
+      alpha = as.double(input$alpha),                  # double : alpha       
+      period = as.integer(input$freq),                # freq
       e_value = T,
       plot = T
     )
